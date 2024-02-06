@@ -1,12 +1,16 @@
+// Fernando Haro Calvo 372106
+// 05 de febrero de 2024
+
 #include <stdio.h>
 #include <stdlib.h>
 
 // Estructuras
 typedef struct info
 {
-    char nombre[30];
+    int matricula;
     char apPat[30];
     char apMat[30];
+    char nombre[30];
 } Tinfo;
 
 typedef struct nodo
@@ -24,6 +28,12 @@ Tnodo *crearNodo(Tinfo datos);
 Tinfo *leerDatos();
 
 void insertarInicio(Tnodo **lista, Tinfo *datos);
+void insertarFinal(Tnodo **lista, Tinfo *datos);
+void insertarPos(Tnodo **lista, Tinfo *datos, int pos);
+
+void eliminarInicio(Tnodo **lista);
+void eliminarFinal(Tnodo **lista);
+void eliminarPos(Tnodo **lista, int pos);
 
 int main()
 {
@@ -90,6 +100,7 @@ void menuInsertar(Tnodo **lista)
             break;
         case 2:
             datos = leerDatos();
+            insertarFinal(lista, datos);
             break;
         case 3:
             datos = leerDatos();
@@ -97,7 +108,7 @@ void menuInsertar(Tnodo **lista)
             scanf("%d", &pos);
             system("CLS");
 
-            printf("Insertar en posición especifica\n");
+            insertarPos(lista, datos, pos);
             break;
         default:
             printf("Opcion no valida\n");
@@ -127,9 +138,11 @@ void menuEliminar(Tnodo **lista)
         {
         case 1:
             datos = leerDatos();
+            eliminarInicio(lista);
             break;
         case 2:
             datos = leerDatos();
+            eliminarFinal(lista);
             break;
         case 3:
             datos = leerDatos();
@@ -137,7 +150,7 @@ void menuEliminar(Tnodo **lista)
             scanf("%d", &pos);
             system("CLS");
 
-            printf("Eliminar en posición especifica\n");
+            eliminarPos(lista, pos);
             break;
         default:
             printf("Opcion no valida\n");
@@ -152,11 +165,13 @@ void menuEliminar(Tnodo **lista)
 void mostrarLista(Tnodo *lista)
 {
     Tnodo *temp = lista;
+    int i = 1;
 
     while (temp != NULL)
     {
-        printf("%s %s %s\n", temp->datos.nombre, temp->datos.apPat, temp->datos.apMat);
+        printf("%d %s %s %s\n", i, temp->datos.nombre, temp->datos.apPat, temp->datos.apMat);
         temp = temp->sig;
+        i++;
     }
 }
 
@@ -173,6 +188,8 @@ Tinfo *leerDatos()
 {
     Tinfo *datos = (Tinfo *)malloc(sizeof(Tinfo));
 
+    printf("Matricula: ");
+    scanf("%d", &datos->matricula);
     printf("Nombre: ");
     scanf("%s", datos->nombre);
     printf("Apellido paterno: ");
@@ -185,8 +202,88 @@ Tinfo *leerDatos()
 
 void insertarInicio(Tnodo **lista, Tinfo *datos)
 {
-    Tnodo *nuevoNodo = crearNodo(*datos);
+    Tnodo *nodo = crearNodo(*datos);
 
-    nuevoNodo->sig = *lista;
-    *lista = nuevoNodo;
+    nodo->sig = *lista;
+    *lista = nodo;
+}
+
+void insertarFinal(Tnodo **lista, Tinfo *datos)
+{
+    Tnodo *nuevoNodo = crearNodo(*datos);
+    Tnodo *temp = *lista;
+
+    if (*lista == NULL)
+    {
+        *lista = nuevoNodo;
+    }
+    else
+    {
+        while (temp->sig != NULL)
+        {
+            temp = temp->sig;
+        }
+        temp->sig = nuevoNodo;
+    }
+}
+
+void insertarPos(Tnodo **lista, Tinfo *datos, int pos)
+{
+    Tnodo *nuevoNodo = crearNodo(*datos);
+    Tnodo *temp = *lista;
+
+    if (pos == 1)
+    {
+        insertarInicio(lista, datos);
+    }
+    else
+    {
+        for (int i = 1; i < pos - 1; i++)
+        {
+            temp = temp->sig;
+        }
+        nuevoNodo->sig = temp->sig;
+        temp->sig = nuevoNodo;
+    }
+}
+
+void eliminarInicio(Tnodo **lista)
+{
+    Tnodo *temp = *lista;
+
+    *lista = temp->sig;
+}
+
+void eliminarFinal(Tnodo **lista)
+{
+    Tnodo *temp = *lista;
+    Tnodo *tempAnt = NULL;
+
+    while (temp->sig != NULL)
+    {
+        tempAnt = temp;
+        temp = temp->sig;
+    }
+    tempAnt->sig = NULL;
+}
+
+void eliminarPos(Tnodo **lista, int pos)
+{
+    Tnodo *temp = *lista;
+    Tnodo *tempAnt = NULL;
+
+    if (pos == 1)
+    {
+        eliminarInicio(lista);
+    }
+    else
+    {
+        for (int i = 1; i < pos; i++)
+        {
+            tempAnt = temp;
+            temp = temp->sig;
+        }
+
+        tempAnt->sig = temp->sig;
+    }
 }

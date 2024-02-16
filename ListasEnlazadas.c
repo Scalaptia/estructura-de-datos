@@ -20,6 +20,9 @@ typedef struct nodo
 } Tnodo;
 
 // Prototipos
+void pause();
+int largoLista(Tnodo *lista);
+
 void menuInsertar(Tnodo **lista);
 void menuEliminar(Tnodo **lista);
 
@@ -37,6 +40,7 @@ void eliminarPos(Tnodo **lista, int pos);
 
 int main()
 {
+    system("clear");
     Tnodo *lista = NULL;
 
     int opc;
@@ -50,7 +54,7 @@ int main()
 
         printf("Opcion: ");
         scanf("%d", &opc);
-        system("CLS");
+        system("clear");
 
         switch (opc)
         {
@@ -62,14 +66,14 @@ int main()
             break;
         case 3:
             mostrarLista(lista);
-            system("PAUSE");
+            pause();
             break;
         default:
             printf("Opcion no valida\n");
             break;
         }
 
-        system("CLS");
+        system("clear");
     } while (opc != 4);
 
     return 0;
@@ -90,7 +94,7 @@ void menuInsertar(Tnodo **lista)
 
         printf("Opcion: ");
         scanf("%d", &opc);
-        system("CLS");
+        system("clear");
 
         switch (opc)
         {
@@ -106,7 +110,7 @@ void menuInsertar(Tnodo **lista)
             datos = leerDatos();
             printf("En que posicion desea insertar?: ");
             scanf("%d", &pos);
-            system("CLS");
+            system("clear");
 
             insertarPos(lista, datos, pos);
             break;
@@ -115,7 +119,7 @@ void menuInsertar(Tnodo **lista)
             break;
         }
 
-        system("CLS");
+        system("clear");
     } while (opc != 4);
 }
 
@@ -132,23 +136,20 @@ void menuEliminar(Tnodo **lista)
 
         printf("Opcion: ");
         scanf("%d", &opc);
-        system("CLS");
+        system("clear");
 
         switch (opc)
         {
         case 1:
-            datos = leerDatos();
             eliminarInicio(lista);
             break;
         case 2:
-            datos = leerDatos();
             eliminarFinal(lista);
             break;
         case 3:
-            datos = leerDatos();
             printf("En que posicion desea eliminar: ");
             scanf("%d", &pos);
-            system("CLS");
+            system("clear");
 
             eliminarPos(lista, pos);
             break;
@@ -157,11 +158,25 @@ void menuEliminar(Tnodo **lista)
             break;
         }
 
-        system("CLS");
+        system("clear");
     } while (opc != 4);
 }
 
 // Funciones
+int largoLista(Tnodo *lista)
+{
+    Tnodo *temp = lista;
+    int i = 0;
+
+    while (temp != NULL)
+    {
+        temp = temp->sig;
+        i++;
+    }
+
+    return i;
+}
+
 void mostrarLista(Tnodo *lista)
 {
     Tnodo *temp = lista;
@@ -169,7 +184,7 @@ void mostrarLista(Tnodo *lista)
 
     while (temp != NULL)
     {
-        printf("%d %s %s %s\n", i, temp->datos.nombre, temp->datos.apPat, temp->datos.apMat);
+        printf("%d %d %s %s %s\n", i, temp->datos.matricula, temp->datos.nombre, temp->datos.apPat, temp->datos.apMat);
         temp = temp->sig;
         i++;
     }
@@ -232,6 +247,14 @@ void insertarPos(Tnodo **lista, Tinfo *datos, int pos)
     Tnodo *nuevoNodo = crearNodo(*datos);
     Tnodo *temp = *lista;
 
+    int largo = largoLista(*lista);
+
+    if (pos > largo)
+    {
+        insertarFinal(lista, datos);
+        return;
+    }
+
     if (pos == 1)
     {
         insertarInicio(lista, datos);
@@ -242,13 +265,33 @@ void insertarPos(Tnodo **lista, Tinfo *datos, int pos)
         {
             temp = temp->sig;
         }
+
         nuevoNodo->sig = temp->sig;
         temp->sig = nuevoNodo;
     }
 }
 
+void insertarPosicion(Tnodo **lista, Tinfo *info, int pos)
+{
+    Tnodo *nuevoNodo = crearNodo(*info);
+
+    if (*lista == NULL)
+    {
+        *lista = nuevoNodo;
+    }
+    else
+    {
+        Tnodo *puntero;
+    }
+}
+
 void eliminarInicio(Tnodo **lista)
 {
+    if (*lista == NULL)
+    {
+        return;
+    }
+
     Tnodo *temp = *lista;
 
     *lista = temp->sig;
@@ -256,8 +299,20 @@ void eliminarInicio(Tnodo **lista)
 
 void eliminarFinal(Tnodo **lista)
 {
+    if (*lista == NULL)
+    {
+        return;
+    }
+
     Tnodo *temp = *lista;
     Tnodo *tempAnt = NULL;
+    int largo = largoLista(*lista);
+
+    if (largo == 1)
+    {
+        *lista = NULL;
+        return;
+    }
 
     while (temp->sig != NULL)
     {
@@ -269,8 +324,21 @@ void eliminarFinal(Tnodo **lista)
 
 void eliminarPos(Tnodo **lista, int pos)
 {
+    if (*lista == NULL)
+    {
+        return;
+    }
+
     Tnodo *temp = *lista;
     Tnodo *tempAnt = NULL;
+
+    int largo = largoLista(*lista);
+
+    if (pos > largo)
+    {
+        eliminarFinal(lista);
+        return;
+    }
 
     if (pos == 1)
     {
@@ -286,4 +354,12 @@ void eliminarPos(Tnodo **lista, int pos)
 
         tempAnt->sig = temp->sig;
     }
+}
+
+void pause()
+{
+    printf("Presione enter para continuar...");
+    while (getchar() != '\n')
+        ;
+    getchar();
 }

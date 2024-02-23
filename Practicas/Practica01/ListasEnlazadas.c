@@ -11,7 +11,7 @@ typedef struct info
     char apPat[30];
     char apMat[30];
     char nombre[30];
-} Tinfo;
+} Tdatos;
 
 typedef struct nodo
 {
@@ -26,16 +26,16 @@ int largoLista(Tnodo *lista);
 void menuInsertar(Tnodo **lista);
 void menuEliminar(Tnodo **lista);
 
-void mostrarLista(Tnodo *lista);
-Tnodo *crearNodo(Tinfo datos);
-Tinfo *leerDatos();
+void mostrarPila(Tnodo *lista);
+Tnodo *crearNodo(Tdatos datos);
+Tdatos *leerDatos();
 
-void insertarInicio(Tnodo **lista, Tinfo *datos);
-void insertarFinal(Tnodo **lista, Tinfo *datos);
-void insertarPos(Tnodo **lista, Tinfo *datos, int pos);
+void insertarInicio(Tnodo **lista, Tdatos *datos);
+void push(Tnodo **lista, Tdatos *datos);
+void insertarPos(Tnodo **lista, Tdatos *datos, int pos);
 
 void eliminarInicio(Tnodo **lista);
-void eliminarFinal(Tnodo **lista);
+void pop(Tnodo **lista);
 void eliminarPos(Tnodo **lista, int pos);
 
 int main()
@@ -65,7 +65,7 @@ int main()
             menuEliminar(&lista);
             break;
         case 3:
-            mostrarLista(lista);
+            mostrarPila(lista);
             pause();
             break;
         default:
@@ -83,7 +83,7 @@ int main()
 void menuInsertar(Tnodo **lista)
 {
     int opc, pos;
-    Tinfo *datos;
+    Tdatos *datos;
 
     do
     {
@@ -104,7 +104,7 @@ void menuInsertar(Tnodo **lista)
             break;
         case 2:
             datos = leerDatos();
-            insertarFinal(lista, datos);
+            push(lista, datos);
             break;
         case 3:
             datos = leerDatos();
@@ -126,7 +126,7 @@ void menuInsertar(Tnodo **lista)
 void menuEliminar(Tnodo **lista)
 {
     int opc, pos;
-    Tinfo *datos;
+    Tdatos *datos;
     do
     {
         printf("1.- Eliminar al inicio\n");
@@ -144,7 +144,7 @@ void menuEliminar(Tnodo **lista)
             eliminarInicio(lista);
             break;
         case 2:
-            eliminarFinal(lista);
+            pop(lista);
             break;
         case 3:
             printf("En que posicion desea eliminar: ");
@@ -177,7 +177,7 @@ int largoLista(Tnodo *lista)
     return i;
 }
 
-void mostrarLista(Tnodo *lista)
+void mostrarPila(Tnodo *lista)
 {
     Tnodo *temp = lista;
     int i = 1;
@@ -190,7 +190,7 @@ void mostrarLista(Tnodo *lista)
     }
 }
 
-Tnodo *crearNodo(Tinfo datos)
+Tnodo *crearNodo(Tdatos datos)
 {
     Tnodo *nuevoNodo = (Tnodo *)malloc(sizeof(Tnodo));
 
@@ -199,9 +199,9 @@ Tnodo *crearNodo(Tinfo datos)
     return nuevoNodo;
 }
 
-Tinfo *leerDatos()
+Tdatos *leerDatos()
 {
-    Tinfo *datos = (Tinfo *)malloc(sizeof(Tinfo));
+    Tdatos *datos = (Tdatos *)malloc(sizeof(Tdatos));
 
     printf("Matricula: ");
     scanf("%d", &datos->matricula);
@@ -215,7 +215,7 @@ Tinfo *leerDatos()
     return datos;
 }
 
-void insertarInicio(Tnodo **lista, Tinfo *datos)
+void insertarInicio(Tnodo **lista, Tdatos *datos)
 {
     Tnodo *nodo = crearNodo(*datos);
 
@@ -223,7 +223,7 @@ void insertarInicio(Tnodo **lista, Tinfo *datos)
     *lista = nodo;
 }
 
-void insertarFinal(Tnodo **lista, Tinfo *datos)
+void push(Tnodo **lista, Tdatos *datos)
 {
     Tnodo *nuevoNodo = crearNodo(*datos);
     Tnodo *temp = *lista;
@@ -242,7 +242,7 @@ void insertarFinal(Tnodo **lista, Tinfo *datos)
     }
 }
 
-void insertarPos(Tnodo **lista, Tinfo *datos, int pos)
+void insertarPos(Tnodo **lista, Tdatos *datos, int pos)
 {
     Tnodo *nuevoNodo = crearNodo(*datos);
     Tnodo *temp = *lista;
@@ -251,7 +251,7 @@ void insertarPos(Tnodo **lista, Tinfo *datos, int pos)
 
     if (pos > largo)
     {
-        insertarFinal(lista, datos);
+        push(lista, datos);
         return;
     }
 
@@ -271,7 +271,7 @@ void insertarPos(Tnodo **lista, Tinfo *datos, int pos)
     }
 }
 
-void insertarPosicion(Tnodo **lista, Tinfo *info, int pos)
+void insertarPosicion(Tnodo **lista, Tdatos *info, int pos)
 {
     Tnodo *nuevoNodo = crearNodo(*info);
 
@@ -297,7 +297,7 @@ void eliminarInicio(Tnodo **lista)
     *lista = temp->sig;
 }
 
-void eliminarFinal(Tnodo **lista)
+void pop(Tnodo **lista)
 {
     if (*lista == NULL)
     {
@@ -336,7 +336,7 @@ void eliminarPos(Tnodo **lista, int pos)
 
     if (pos > largo)
     {
-        eliminarFinal(lista);
+        pop(lista);
         return;
     }
 

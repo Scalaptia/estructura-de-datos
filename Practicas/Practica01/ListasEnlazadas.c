@@ -31,11 +31,11 @@ Tnodo *crearNodo(Tdatos datos);
 Tdatos *leerDatos();
 
 void insertarInicio(Tnodo **lista, Tdatos *datos);
-void push(Tnodo **lista, Tdatos *datos);
+void insertarFinal(Tnodo **lista, Tdatos *datos);
 void insertarPos(Tnodo **lista, Tdatos *datos, int pos);
 
 void eliminarInicio(Tnodo **lista);
-void pop(Tnodo **lista);
+void eliminarFinal(Tnodo **lista);
 void eliminarPos(Tnodo **lista, int pos);
 
 int main()
@@ -104,7 +104,7 @@ void menuInsertar(Tnodo **lista)
             break;
         case 2:
             datos = leerDatos();
-            push(lista, datos);
+            insertarFinal(lista, datos);
             break;
         case 3:
             datos = leerDatos();
@@ -144,7 +144,7 @@ void menuEliminar(Tnodo **lista)
             eliminarInicio(lista);
             break;
         case 2:
-            pop(lista);
+            eliminarFinal(lista);
             break;
         case 3:
             printf("En que posicion desea eliminar: ");
@@ -223,7 +223,7 @@ void insertarInicio(Tnodo **lista, Tdatos *datos)
     *lista = nodo;
 }
 
-void push(Tnodo **lista, Tdatos *datos)
+void insertarFinal(Tnodo **lista, Tdatos *datos)
 {
     Tnodo *nuevoNodo = crearNodo(*datos);
     Tnodo *temp = *lista;
@@ -251,7 +251,7 @@ void insertarPos(Tnodo **lista, Tdatos *datos, int pos)
 
     if (pos > largo)
     {
-        push(lista, datos);
+        insertarFinal(lista, datos);
         return;
     }
 
@@ -297,7 +297,7 @@ void eliminarInicio(Tnodo **lista)
     *lista = temp->sig;
 }
 
-void pop(Tnodo **lista)
+void eliminarFinal(Tnodo **lista)
 {
     if (*lista == NULL)
     {
@@ -336,7 +336,7 @@ void eliminarPos(Tnodo **lista, int pos)
 
     if (pos > largo)
     {
-        pop(lista);
+        eliminarFinal(lista);
         return;
     }
 
